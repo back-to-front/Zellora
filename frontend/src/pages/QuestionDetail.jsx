@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router";
+import { useParams, useNavigate, Link } from "react-router";
 import {
   FaArrowUp,
   FaArrowDown,
@@ -53,37 +53,175 @@ const QuestionDetail = () => {
   }, [id]);
 
   const handleVoteQuestion = async (voteType) => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !user) {
       toast.error("Please login to vote");
       return;
     }
 
     try {
+      // Optimistic UI update
+      const optimisticQuestion = { ...question };
+      const userId = user?._id; // Add safe access with optional chaining
+
+      if (!userId) {
+        toast.error("User information is missing. Please log in again.");
+        return;
+      }
+
+      // Handle upvote optimistically
+      if (voteType === "upvote") {
+        const alreadyUpvoted =
+          optimisticQuestion.votes.upvotes.includes(userId);
+
+        if (alreadyUpvoted) {
+          // Remove upvote
+          optimisticQuestion.votes.upvotes =
+            optimisticQuestion.votes.upvotes.filter((id) => id !== userId);
+          optimisticQuestion.voteCount--;
+        } else {
+          // Add upvote
+          optimisticQuestion.votes.upvotes.push(userId);
+          optimisticQuestion.voteCount++;
+
+          // Remove downvote if exists
+          if (optimisticQuestion.votes.downvotes.includes(userId)) {
+            optimisticQuestion.votes.downvotes =
+              optimisticQuestion.votes.downvotes.filter((id) => id !== userId);
+            optimisticQuestion.voteCount++;
+          }
+        }
+      }
+
+      // Handle downvote optimistically
+      if (voteType === "downvote") {
+        const alreadyDownvoted =
+          optimisticQuestion.votes.downvotes.includes(userId);
+
+        if (alreadyDownvoted) {
+          // Remove downvote
+          optimisticQuestion.votes.downvotes =
+            optimisticQuestion.votes.downvotes.filter((id) => id !== userId);
+          optimisticQuestion.voteCount++;
+        } else {
+          // Add downvote
+          optimisticQuestion.votes.downvotes.push(userId);
+          optimisticQuestion.voteCount--;
+
+          // Remove upvote if exists
+          if (optimisticQuestion.votes.upvotes.includes(userId)) {
+            optimisticQuestion.votes.upvotes =
+              optimisticQuestion.votes.upvotes.filter((id) => id !== userId);
+            optimisticQuestion.voteCount--;
+          }
+        }
+      }
+
+      // Update UI immediately
+      setQuestion(optimisticQuestion);
+
+      // Call API
       const updatedQuestion = await questionService.voteQuestion(id, voteType);
+
+      // Update with server response
       setQuestion(updatedQuestion);
-      toast.success(
-        `Question ${voteType === "upvote" ? "upvoted" : "downvoted"}`
-      );
     } catch (err) {
+      // Revert to original state and show error
       toast.error(err.response?.data?.message || "Failed to vote on question");
+      // Refresh the question to get correct state
+      try {
+        const refreshedQuestion = await questionService.getQuestionById(id);
+        setQuestion(refreshedQuestion);
+      } catch (refreshErr) {
+        console.error("Error refreshing question data:", refreshErr);
+      }
     }
   };
 
   const handleVoteAnswer = async (answerId, voteType) => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !user) {
       toast.error("Please login to vote");
       return;
     }
 
     try {
-      const updatedAnswer = await answerService.voteAnswer(answerId, voteType);
+      // Find the answer to update
+      const answerToUpdate = answers.find((answer) => answer._id === answerId);
+      if (!answerToUpdate) return;
+
+      // Create a copy for optimistic update
+      const updatedAnswer = { ...answerToUpdate };
+      const userId = user?._id;
+
+      if (!userId) {
+        toast.error("User information is missing. Please log in again.");
+        return;
+      } // Handle upvote optimistically
+      if (voteType === "upvote") {
+        const alreadyUpvoted = updatedAnswer.votes.upvotes.includes(userId);
+
+        if (alreadyUpvoted) {
+          // Remove upvote
+          updatedAnswer.votes.upvotes = updatedAnswer.votes.upvotes.filter(
+            (id) => id !== userId
+          );
+          updatedAnswer.voteCount--;
+        } else {
+          // Add upvote
+          updatedAnswer.votes.upvotes.push(userId);
+          updatedAnswer.voteCount++;
+
+          // Remove downvote if exists
+          if (updatedAnswer.votes.downvotes.includes(userId)) {
+            updatedAnswer.votes.downvotes =
+              updatedAnswer.votes.downvotes.filter((id) => id !== userId);
+            updatedAnswer.voteCount++;
+          }
+        }
+      }
+
+      // Handle downvote optimistically
+      if (voteType === "downvote") {
+        const alreadyDownvoted = updatedAnswer.votes.downvotes.includes(userId);
+
+        if (alreadyDownvoted) {
+          // Remove downvote
+          updatedAnswer.votes.downvotes = updatedAnswer.votes.downvotes.filter(
+            (id) => id !== userId
+          );
+          updatedAnswer.voteCount++;
+        } else {
+          // Add downvote
+          updatedAnswer.votes.downvotes.push(userId);
+          updatedAnswer.voteCount--;
+
+          // Remove upvote if exists
+          if (updatedAnswer.votes.upvotes.includes(userId)) {
+            updatedAnswer.votes.upvotes = updatedAnswer.votes.upvotes.filter(
+              (id) => id !== userId
+            );
+            updatedAnswer.voteCount--;
+          }
+        }
+      }
+
+      // Update UI immediately
       setAnswers(
         answers.map((answer) =>
           answer._id === answerId ? updatedAnswer : answer
         )
       );
-      toast.success(
-        `Answer ${voteType === "upvote" ? "upvoted" : "downvoted"}`
+
+      // Call API
+      const serverUpdatedAnswer = await answerService.voteAnswer(
+        answerId,
+        voteType
+      );
+
+      // Update with server response
+      setAnswers(
+        answers.map((answer) =>
+          answer._id === answerId ? serverUpdatedAnswer : answer
+        )
       );
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to vote on answer");
@@ -176,11 +314,16 @@ const QuestionDetail = () => {
     );
   }
 
-  if (error || !question) {
-    return <Alert variant='danger'>{error || "Question not found"}</Alert>;
+  if (error) {
+    return <Alert variant='danger'>{error}</Alert>;
   }
 
-  const isQuestionAuthor = user && question.user._id === user._id;
+  if (!question) {
+    return <Alert variant='danger'>Question not found</Alert>;
+  }
+
+  const isQuestionAuthor =
+    user && question.user && question.user._id === user._id;
   const isAdmin = user && user.isAdmin;
   const canDeleteQuestion = isQuestionAuthor || isAdmin;
 
@@ -204,22 +347,34 @@ const QuestionDetail = () => {
       <Card className='question-detail-card'>
         <div className='question-actions'>
           <button
+            type='button'
             className={`vote-button ${
-              user && question.votes?.upvotes.includes(user._id) ? "voted" : ""
+              user && question.votes?.upvotes?.includes(user._id) ? "voted" : ""
             }`}
-            onClick={() => handleVoteQuestion("upvote")}
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              handleVoteQuestion("upvote");
+              return false;
+            }}
             aria-label='Upvote question'
           >
             <FaArrowUp />
           </button>
-          <span className='vote-count'>{question.voteCount}</span>
+          <span className='vote-count'>{question.voteCount || 0}</span>
           <button
+            type='button'
             className={`vote-button ${
-              user && question.votes?.downvotes.includes(user._id)
+              user && question.votes?.downvotes?.includes(user._id)
                 ? "voted"
                 : ""
             }`}
-            onClick={() => handleVoteQuestion("downvote")}
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              handleVoteQuestion("downvote");
+              return false;
+            }}
             aria-label='Downvote question'
           >
             <FaArrowDown />
@@ -304,24 +459,36 @@ const QuestionDetail = () => {
 
                   <div className='answer-actions'>
                     <button
+                      type='button'
                       className={`vote-button ${
-                        user && answer.votes?.upvotes.includes(user._id)
+                        user && answer.votes?.upvotes?.includes(user?._id)
                           ? "voted"
                           : ""
                       }`}
-                      onClick={() => handleVoteAnswer(answer._id, "upvote")}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        handleVoteAnswer(answer._id, "upvote");
+                        return false;
+                      }}
                       aria-label='Upvote answer'
                     >
                       <FaArrowUp />
                     </button>
-                    <span className='vote-count'>{answer.voteCount}</span>
+                    <span className='vote-count'>{answer.voteCount || 0}</span>
                     <button
+                      type='button'
                       className={`vote-button ${
-                        user && answer.votes?.downvotes.includes(user._id)
+                        user && answer.votes?.downvotes?.includes(user?._id)
                           ? "voted"
                           : ""
                       }`}
-                      onClick={() => handleVoteAnswer(answer._id, "downvote")}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        handleVoteAnswer(answer._id, "downvote");
+                        return false;
+                      }}
                       aria-label='Downvote answer'
                     >
                       <FaArrowDown />
