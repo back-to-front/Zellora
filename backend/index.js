@@ -1,7 +1,15 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import connectDB from './config/db.js';
+import {
+  limiter,
+  corsOptions,
+  securityHeaders,
+  csrfProtection,
+  generateCSRFToken,
+} from './middleware/security.middleware.js';
 
 // Route imports
 import userRoutes from './routes/user.routes.js';
@@ -15,23 +23,34 @@ connectDB();
 
 const app = express();
 
-// Middleware
-app.use(express.json());
-app.use(cors());
+// Security Middleware
+app.use(securityHeaders); // Helmet for security headers
 
-// Routes
-app.use('/api/users', userRoutes);
-app.use('/api/questions', questionRoutes);
-app.use('/api/answers', answerRoutes);
+// Apply proper CORS configuration (must be before other middleware)
+app.use(cors(corsOptions));
+
+// Parse request body
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser()); // Required for cookies
+
+// Rate limiting
+app.use(limiter);
+
+// CSRF Token endpoint - place this before CSRF protection
+app.get('/api/csrf-token', (req, res) => {
+  const token = generateCSRFToken();
+  res.json({ csrfToken: token });
+});
+
+// Routes with CSRF protection
+app.use('/api/users', csrfProtection, userRoutes);
+app.use('/api/questions', csrfProtection, questionRoutes);
+app.use('/api/answers', csrfProtection, answerRoutes);
 
 // Root Route
 app.get('/', (req, res) => {
-  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-  res.status(statusCode);
-  res.json({
-    message: err.message,
-    stack: process.env.NODE_ENV === 'production' ? null : err.stack,
-  });
+  res.json({ message: 'API is running' });
 });
 
 // Handle 404
