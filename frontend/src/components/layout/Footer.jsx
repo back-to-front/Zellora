@@ -68,7 +68,7 @@ const Footer = () => {
             <h3 className='footer-title'>Connect</h3>
             <div className='social-links'>
               <a
-                href='https://github.com/zellora'
+                href='https://github.com/back-to-front'
                 target='_blank'
                 rel='noopener noreferrer'
                 className='social-link'

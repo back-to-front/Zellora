@@ -13,7 +13,11 @@ import EditQuestion from "./pages/EditQuestion";
 import EditAnswer from "./pages/EditAnswer";
 import Profile from "./pages/Profile";
 import AskQuestion from "./pages/AskQuestion";
+import TermsOfService from "./pages/TermsOfService";
 import Spinner from "./components/ui/Spinner";
+
+// Lazy load pages that might trigger tracking protection
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 
 // Lazy load admin dashboard
 const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
@@ -59,6 +63,21 @@ const router = createBrowserRouter([
           <ProtectedRoute>
             <EditAnswer />
           </ProtectedRoute>
+        ),
+      },
+      { path: "terms", element: <TermsOfService /> },
+      {
+        path: "privacy",
+        element: (
+          <Suspense
+            fallback={
+              <div className='spinner-container'>
+                <Spinner size='large' />
+              </div>
+            }
+          >
+            <PrivacyPolicy />
+          </Suspense>
         ),
       },
       {
