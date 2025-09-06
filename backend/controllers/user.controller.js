@@ -1,5 +1,5 @@
-import User from '../models/use.model.js';
-import Question from '../models/questio.model.js';
+import User from '../models/user.model.js';
+import Question from '../models/question.model.js';
 import Answer from '../models/answer.model.js';
 import generateToken from '../utils/generateToken.js';
 

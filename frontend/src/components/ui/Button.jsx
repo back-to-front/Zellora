@@ -1,21 +1,21 @@
-import './Button.css';
+import "./Button.css";
 
 const Button = ({
   children,
-  type = 'button',
-  variant = 'primary',
-  size = 'medium',
+  type = "button",
+  variant = "primary",
+  size = "medium",
   onClick,
   disabled = false,
   fullWidth = false,
-  className = '',
+  className = "",
   ...props
 }) => {
   const buttonClasses = `
     btn 
     btn-${variant} 
     btn-${size} 
-    ${fullWidth ? 'btn-block' : ''} 
+    ${fullWidth ? "btn-block" : ""} 
     ${className}
   `;
 

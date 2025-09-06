@@ -234,12 +234,12 @@
     flex-direction: column;
     gap: var(--spacing-md);
   }
-  
+
   .question-detail-card,
   .answer-card {
     flex-direction: column;
   }
-  
+
   .question-actions,
   .answer-actions {
     flex-direction: row;
@@ -247,26 +247,26 @@
     padding: var(--spacing-md);
     border-bottom: 1px solid var(--border-color);
   }
-  
+
   .vote-button {
     margin: 0 var(--spacing-md);
   }
-  
+
   .vote-count {
     margin: 0 var(--spacing-xs);
   }
-  
+
   .accept-button {
     margin-top: 0;
     margin-left: var(--spacing-lg);
   }
-  
+
   .question-footer,
   .answer-footer {
     flex-direction: column;
     gap: var(--spacing-md);
   }
-  
+
   .question-controls,
   .answer-controls {
     margin-top: var(--spacing-sm);

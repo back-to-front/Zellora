@@ -190,19 +190,19 @@
   .header-content {
     flex-wrap: wrap;
   }
-  
+
   .search-form {
     order: 3;
     margin: var(--spacing-md) 0 0;
     max-width: 100%;
     width: 100%;
   }
-  
+
   .mobile-menu-toggle {
     display: block;
     order: 2;
   }
-  
+
   .main-nav {
     display: block;
     position: fixed;
@@ -216,29 +216,29 @@
     border-bottom: 1px solid var(--border-color);
     order: 4;
   }
-  
+
   .main-nav.active {
     height: auto;
     max-height: 80vh;
     overflow-y: auto;
   }
-  
+
   .nav-list {
     flex-direction: column;
     align-items: stretch;
     padding: var(--spacing-md);
   }
-  
+
   .nav-item {
     margin: 0;
     margin-bottom: var(--spacing-sm);
   }
-  
+
   .nav-link {
     padding: var(--spacing-sm);
     border-radius: var(--border-radius);
   }
-  
+
   .dropdown-menu {
     position: static;
     opacity: 1;

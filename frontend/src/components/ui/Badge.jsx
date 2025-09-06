@@ -1,18 +1,18 @@
-import './Badge.css';
+import "./Badge.css";
 
 const Badge = ({
   children,
-  variant = 'primary',
-  size = 'medium',
+  variant = "primary",
+  size = "medium",
   rounded = false,
-  className = '',
+  className = "",
   ...props
 }) => {
   const badgeClasses = `
     badge
     badge-${variant}
     badge-${size}
-    ${rounded ? 'badge-rounded' : ''}
+    ${rounded ? "badge-rounded" : ""}
     ${className}
   `;
 

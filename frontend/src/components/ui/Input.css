@@ -25,10 +25,12 @@
   background-clip: padding-box;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  transition: border-color var(--transition-speed) ease-in-out, box-shadow var(--transition-speed) ease-in-out;
+  transition: border-color var(--transition-speed) ease-in-out,
+    box-shadow var(--transition-speed) ease-in-out;
 }
 
-.form-control:focus, .form-control.is-focused {
+.form-control:focus,
+.form-control.is-focused {
   border-color: var(--primary-light);
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(74, 134, 232, 0.25);

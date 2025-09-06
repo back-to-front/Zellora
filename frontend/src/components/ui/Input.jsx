@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import './Input.css';
+import { useState } from "react";
+import "./Input.css";
 
 const Input = ({
   label,
-  type = 'text',
+  type = "text",
   id,
   name,
   value,
@@ -12,26 +12,26 @@ const Input = ({
   error,
   disabled = false,
   required = false,
-  className = '',
+  className = "",
   ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false);
-  
+
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
-  
+
   const inputClasses = `
     form-control
-    ${error ? 'is-invalid' : ''}
-    ${isFocused ? 'is-focused' : ''}
+    ${error ? "is-invalid" : ""}
+    ${isFocused ? "is-focused" : ""}
     ${className}
   `;
 
   return (
-    <div className="form-group">
+    <div className='form-group'>
       {label && (
-        <label htmlFor={id} className="form-label">
-          {label} {required && <span className="required-indicator">*</span>}
+        <label htmlFor={id} className='form-label'>
+          {label} {required && <span className='required-indicator'>*</span>}
         </label>
       )}
       <input
@@ -48,7 +48,7 @@ const Input = ({
         onBlur={handleBlur}
         {...props}
       />
-      {error && <div className="invalid-feedback">{error}</div>}
+      {error && <div className='invalid-feedback'>{error}</div>}
     </div>
   );
 };

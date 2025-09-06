@@ -107,7 +107,8 @@
 .question-item {
   display: flex;
   padding: 0;
-  transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+  transition: transform var(--transition-speed) ease,
+    box-shadow var(--transition-speed) ease;
 }
 
 .question-item:hover {
@@ -214,42 +215,42 @@
     align-items: flex-start;
     gap: var(--spacing-md);
   }
-  
+
   .questions-filters {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .search-form {
     width: 100%;
   }
-  
+
   .sort-controls {
     width: 100%;
     justify-content: space-between;
   }
-  
+
   .question-item {
     flex-direction: column;
   }
-  
+
   .question-stats {
     flex-direction: row;
     justify-content: center;
     border-right: none;
     border-bottom: 1px solid var(--border-color);
   }
-  
+
   .stat {
     margin: 0 var(--spacing-md);
   }
-  
+
   .question-footer {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--spacing-sm);
   }
-  
+
   .question-meta {
     align-items: flex-start;
     margin-top: var(--spacing-xs);

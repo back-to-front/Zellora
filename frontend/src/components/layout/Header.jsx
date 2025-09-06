@@ -1,18 +1,25 @@
-import { useState } from 'react';
-import { Link } from 'react-router';
-import { FaSearch, FaBars, FaTimes, FaUser, FaSignOutAlt, FaPlus } from 'react-icons/fa';
-import { useAuth } from '../../context/AuthContext';
-import './Header.css';
+import { useState } from "react";
+import { Link } from "react-router";
+import {
+  FaSearch,
+  FaBars,
+  FaTimes,
+  FaUser,
+  FaSignOutAlt,
+  FaPlus,
+} from "react-icons/fa";
+import { useAuth } from "../../context/AuthContext";
+import "./Header.css";
 
 const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     // Handle search functionality
-    console.log('Search for:', searchQuery);
+    console.log("Search for:", searchQuery);
   };
 
   const toggleMenu = () => {
@@ -20,68 +27,68 @@ const Header = () => {
   };
 
   return (
-    <header className="header">
-      <div className="container">
-        <div className="header-content">
-          <div className="logo">
-            <Link to="/" className="brand">
+    <header className='header'>
+      <div className='container'>
+        <div className='header-content'>
+          <div className='logo'>
+            <Link to='/' className='brand'>
               Zellora
             </Link>
           </div>
 
-          <form className="search-form" onSubmit={handleSearchSubmit}>
+          <form className='search-form' onSubmit={handleSearchSubmit}>
             <input
-              type="text"
-              placeholder="Search..."
+              type='text'
+              placeholder='Search...'
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="search-input"
+              className='search-input'
             />
-            <button type="submit" className="search-button">
+            <button type='submit' className='search-button'>
               <FaSearch />
             </button>
           </form>
 
-          <div className="mobile-menu-toggle" onClick={toggleMenu}>
+          <div className='mobile-menu-toggle' onClick={toggleMenu}>
             {isMenuOpen ? <FaTimes /> : <FaBars />}
           </div>
 
-          <nav className={`main-nav ${isMenuOpen ? 'active' : ''}`}>
-            <ul className="nav-list">
-              <li className="nav-item">
-                <Link to="/" className="nav-link">
+          <nav className={`main-nav ${isMenuOpen ? "active" : ""}`}>
+            <ul className='nav-list'>
+              <li className='nav-item'>
+                <Link to='/' className='nav-link'>
                   Home
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link to="/questions" className="nav-link">
+              <li className='nav-item'>
+                <Link to='/questions' className='nav-link'>
                   Questions
                 </Link>
               </li>
               {isAuthenticated ? (
                 <>
-                  <li className="nav-item">
-                    <Link to="/ask" className="nav-link ask-button">
+                  <li className='nav-item'>
+                    <Link to='/ask' className='nav-link ask-button'>
                       <FaPlus /> Ask Question
                     </Link>
                   </li>
-                  <li className="nav-item dropdown">
-                    <button className="nav-link dropdown-toggle">
-                      <span className="user-avatar">
+                  <li className='nav-item dropdown'>
+                    <button className='nav-link dropdown-toggle'>
+                      <span className='user-avatar'>
                         {user?.username?.charAt(0).toUpperCase() || <FaUser />}
                       </span>
                       {user?.username}
                     </button>
-                    <div className="dropdown-menu">
-                      <Link to="/profile" className="dropdown-item">
+                    <div className='dropdown-menu'>
+                      <Link to='/profile' className='dropdown-item'>
                         Profile
                       </Link>
                       {user?.isAdmin && (
-                        <Link to="/admin" className="dropdown-item">
+                        <Link to='/admin' className='dropdown-item'>
                           Admin Dashboard
                         </Link>
                       )}
-                      <button onClick={logout} className="dropdown-item">
+                      <button onClick={logout} className='dropdown-item'>
                         <FaSignOutAlt /> Logout
                       </button>
                     </div>
@@ -89,13 +96,13 @@ const Header = () => {
                 </>
               ) : (
                 <>
-                  <li className="nav-item">
-                    <Link to="/login" className="nav-link">
+                  <li className='nav-item'>
+                    <Link to='/login' className='nav-link'>
                       Login
                     </Link>
                   </li>
-                  <li className="nav-item">
-                    <Link to="/register" className="nav-link signup-button">
+                  <li className='nav-item'>
+                    <Link to='/register' className='nav-link signup-button'>
                       Sign Up
                     </Link>
                   </li>

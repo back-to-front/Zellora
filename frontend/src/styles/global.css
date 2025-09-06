@@ -3,29 +3,29 @@
   --primary-color: #4a86e8;
   --primary-dark: #366fc0;
   --primary-light: #7aa5ed;
-  
+
   --secondary-color: #6c757d;
   --secondary-dark: #495057;
   --secondary-light: #adb5bd;
-  
+
   --success-color: #28a745;
   --danger-color: #dc3545;
   --warning-color: #ffc107;
   --info-color: #17a2b8;
-  
+
   --dark-color: #212529;
   --light-color: #f8f9fa;
-  
+
   --background-color: #ffffff;
   --background-secondary: #f9f9f9;
   --border-color: #e0e0e0;
-  
+
   /* Text Colors */
   --text-primary: #333333;
   --text-secondary: #666666;
   --text-muted: #999999;
   --text-white: #ffffff;
-  
+
   /* Spacing */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
@@ -33,12 +33,12 @@
   --spacing-lg: 1.5rem;
   --spacing-xl: 2rem;
   --spacing-xxl: 3rem;
-  
+
   /* Border Radius */
   --border-radius-sm: 0.25rem;
   --border-radius: 0.5rem;
   --border-radius-lg: 1rem;
-  
+
   /* Font Sizes */
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
@@ -46,20 +46,20 @@
   --font-size-lg: 1.25rem;
   --font-size-xl: 1.5rem;
   --font-size-xxl: 2rem;
-  
+
   /* Font Weights */
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-bold: 700;
-  
+
   /* Shadows */
   --box-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
   --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
   --box-shadow-lg: 0 5px 15px rgba(0, 0, 0, 0.2);
-  
+
   /* Transitions */
   --transition-speed: 0.3s;
-  
+
   /* Container Widths */
   --container-width-sm: 540px;
   --container-width: 720px;
@@ -75,14 +75,20 @@
 }
 
 body {
-  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Helvetica Neue", Arial, sans-serif;
   font-size: var(--font-size-md);
   line-height: 1.6;
   color: var(--text-primary);
   background-color: var(--background-color);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin-bottom: var(--spacing-md);
   font-weight: var(--font-weight-bold);
   line-height: 1.2;
@@ -302,7 +308,8 @@ a:hover {
   cursor: pointer;
 }
 
-.btn:focus, .btn:hover {
+.btn:focus,
+.btn:hover {
   text-decoration: none;
   outline: 0;
 }
@@ -374,7 +381,8 @@ a:hover {
   background-clip: padding-box;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  transition: border-color var(--transition-speed) ease-in-out, box-shadow var(--transition-speed) ease-in-out;
+  transition: border-color var(--transition-speed) ease-in-out,
+    box-shadow var(--transition-speed) ease-in-out;
 }
 
 .form-control:focus {

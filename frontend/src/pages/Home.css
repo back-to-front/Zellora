@@ -49,7 +49,8 @@
 .question-card {
   display: flex;
   margin-bottom: var(--spacing-md);
-  transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+  transition: transform var(--transition-speed) ease,
+    box-shadow var(--transition-speed) ease;
 }
 
 .question-card:hover {
@@ -134,14 +135,14 @@
   .question-card {
     flex-direction: column;
   }
-  
+
   .question-stats {
     flex-direction: row;
     justify-content: center;
     border-right: none;
     border-bottom: 1px solid var(--border-color);
   }
-  
+
   .stat {
     margin: 0 var(--spacing-md);
   }

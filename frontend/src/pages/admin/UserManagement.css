@@ -1,0 +1,208 @@
+.user-management {
+  padding: 1rem;
+}
+
+.page-title {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-text-primary);
+}
+
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
+}
+
+.search-container {
+  flex: 1;
+  min-width: 250px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.25rem;
+  font-size: 0.95rem;
+}
+
+.status-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.25rem;
+  background-color: var(--color-background);
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  background-color: var(--color-background-hover);
+}
+
+.filter-btn.active {
+  background-color: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+.users-table-card {
+  overflow: hidden;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.users-table th {
+  text-align: left;
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.users-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.user-name {
+  font-weight: 500;
+}
+
+.status-badge,
+.role-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-badge.active {
+  color: #10b981;
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.status-badge.suspended {
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.role-badge.admin {
+  color: #4f46e5;
+  background-color: rgba(79, 70, 229, 0.1);
+}
+
+.role-badge.user {
+  color: #6b7280;
+  background-color: rgba(107, 114, 128, 0.1);
+}
+
+.user-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-btn:hover {
+  background-color: var(--color-background-hover);
+}
+
+.action-btn.make-admin {
+  color: #4f46e5;
+}
+
+.action-btn.remove-admin {
+  color: #6b7280;
+}
+
+.action-btn.suspend {
+  color: #f59e0b;
+}
+
+.action-btn.unsuspend {
+  color: #10b981;
+}
+
+.action-btn.delete {
+  color: #ef4444;
+}
+
+.no-users {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-text-secondary);
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 0;
+}
+
+@media (max-width: 768px) {
+  .users-table th:nth-child(4),
+  .users-table td:nth-child(4) {
+    display: none;
+  }
+
+  .user-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 576px) {
+  .users-table th:nth-child(2),
+  .users-table td:nth-child(2),
+  .users-table th:nth-child(5),
+  .users-table td:nth-child(5) {
+    display: none;
+  }
+}

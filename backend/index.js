@@ -4,9 +4,9 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 
 // Route imports
-import userRoutes from './routes/userRoutes.js';
-import questionRoutes from './routes/questionRoutes.js';
-import answerRoutes from './routes/answerRoutes.js';
+import userRoutes from './routes/user.routes.js';
+import questionRoutes from './routes/question.routes.js';
+import answerRoutes from './routes/answer.routes.js';
 
 dotenv.config();
 

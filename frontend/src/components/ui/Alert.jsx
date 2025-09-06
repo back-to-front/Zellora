@@ -1,25 +1,25 @@
-import './Alert.css';
+import "./Alert.css";
 
 const Alert = ({
   children,
-  variant = 'primary',
-  className = '',
+  variant = "primary",
+  className = "",
   onClose,
   ...props
 }) => {
   const alertClasses = `alert alert-${variant} ${className}`;
 
   return (
-    <div className={alertClasses.trim()} role="alert" {...props}>
+    <div className={alertClasses.trim()} role='alert' {...props}>
       {children}
       {onClose && (
         <button
-          type="button"
-          className="alert-close"
-          aria-label="Close"
+          type='button'
+          className='alert-close'
+          aria-label='Close'
           onClick={onClose}
         >
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden='true'>&times;</span>
         </button>
       )}
     </div>
