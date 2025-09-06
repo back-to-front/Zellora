@@ -1,8 +1,19 @@
 import api from './axios';
 
 export const questionService = {
-  getQuestions: async () => {
-    const { data } = await api.get('/questions');
+  getQuestions: async (searchQuery = '') => {
+    const { data } = await api.get(
+      searchQuery
+        ? `/questions?search=${encodeURIComponent(searchQuery)}`
+        : '/questions'
+    );
+    return data;
+  },
+
+  searchQuestions: async (searchQuery) => {
+    const { data } = await api.get(
+      `/questions?search=${encodeURIComponent(searchQuery)}`
+    );
     return data;
   },
 

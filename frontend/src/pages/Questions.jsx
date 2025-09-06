@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import {
   FaPlus,
   FaSearch,
@@ -23,12 +23,21 @@ const Questions = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("newest");
   const [filteredQuestions, setFilteredQuestions] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
         setLoading(true);
-        const response = await questionService.getQuestions();
+
+        // Get search query from URL if available
+        const urlSearchQuery = searchParams.get("search") || "";
+
+        // Update local state to match URL
+        setSearchQuery(urlSearchQuery);
+
+        // Fetch questions with search query if available
+        const response = await questionService.getQuestions(urlSearchQuery);
 
         // Ensure we have an array of questions to work with
         let questionsArray = [];
@@ -57,29 +66,15 @@ const Questions = () => {
     };
 
     fetchQuestions();
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     // Always set filtered questions even if the array is empty
     let filtered = Array.isArray(questions) ? [...questions] : [];
 
-    // Apply search filter if we have questions and a search query
-    if (filtered.length > 0 && searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter((question) => {
-        try {
-          return (
-            (question.title && question.title.toLowerCase().includes(query)) ||
-            (question.body && question.body.toLowerCase().includes(query)) ||
-            (Array.isArray(question.tags) &&
-              question.tags.some((tag) => tag.toLowerCase().includes(query)))
-          );
-        } catch (err) {
-          console.error("Error filtering question:", err, question);
-          return false;
-        }
-      });
-    }
+    // We don't need client-side filtering when using API search
+    // The API already returns filtered results based on the search query
+    // This is only needed if we want additional filtering beyond what the API provides
 
     // Apply sorting if we have questions to sort
     if (filtered.length > 0) {
@@ -111,8 +106,38 @@ const Questions = () => {
       }
     }
 
+    // Apply sorting to the filtered questions
+    if (filtered.length > 0) {
+      try {
+        switch (sortBy) {
+          case "newest":
+            filtered.sort(
+              (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+            );
+            break;
+          case "oldest":
+            filtered.sort(
+              (a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0)
+            );
+            break;
+          case "votes":
+            filtered.sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0));
+            break;
+          case "answers":
+            filtered.sort(
+              (a, b) => (b.answers?.length || 0) - (a.answers?.length || 0)
+            );
+            break;
+          default:
+            break;
+        }
+      } catch (err) {
+        console.error("Error sorting questions:", err);
+      }
+    }
+
     setFilteredQuestions(filtered);
-  }, [questions, searchQuery, sortBy]);
+  }, [questions, sortBy]);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -120,6 +145,14 @@ const Questions = () => {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
+
+    // Update the URL with the search query
+    if (searchQuery.trim()) {
+      setSearchParams({ search: searchQuery.trim() });
+    } else {
+      // If search is empty, remove search param from URL
+      setSearchParams({});
+    }
   };
 
   const handleSortChange = (value) => {
@@ -156,6 +189,9 @@ const Questions = () => {
               onChange={handleSearchChange}
               className='search-input'
             />
+            <button type='submit' className='search-button'>
+              <FaSearch />
+            </button>
           </div>
         </form>
 
