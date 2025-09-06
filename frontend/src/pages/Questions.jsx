@@ -28,8 +28,26 @@ const Questions = () => {
     const fetchQuestions = async () => {
       try {
         setLoading(true);
-        const data = await questionService.getQuestions();
-        setQuestions(data);
+        const response = await questionService.getQuestions();
+
+        // Ensure we have an array of questions to work with
+        let questionsArray = [];
+
+        // Check if response is an array
+        if (Array.isArray(response)) {
+          questionsArray = response;
+        }
+        // Check if response has a questions property that is an array
+        else if (response && Array.isArray(response.questions)) {
+          questionsArray = response.questions;
+        }
+        // If we still don't have an array, log error and use empty array
+        else {
+          console.error("Unexpected API response format:", response);
+          questionsArray = [];
+        }
+
+        setQuestions(questionsArray);
       } catch (err) {
         setError("Failed to fetch questions. Please try again later.");
         console.error("Error fetching questions:", err);
@@ -42,47 +60,58 @@ const Questions = () => {
   }, []);
 
   useEffect(() => {
-    // Filter and sort questions when questions, searchQuery or sortBy changes
-    if (questions.length > 0) {
-      let filtered = [...questions];
+    // Always set filtered questions even if the array is empty
+    let filtered = Array.isArray(questions) ? [...questions] : [];
 
-      // Apply search filter
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase();
-        filtered = filtered.filter(
-          (question) =>
-            question.title.toLowerCase().includes(query) ||
-            question.body.toLowerCase().includes(query) ||
-            question.tags.some((tag) => tag.toLowerCase().includes(query))
-        );
-      }
-
-      // Apply sorting
-      switch (sortBy) {
-        case "newest":
-          filtered.sort(
-            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    // Apply search filter if we have questions and a search query
+    if (filtered.length > 0 && searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((question) => {
+        try {
+          return (
+            (question.title && question.title.toLowerCase().includes(query)) ||
+            (question.body && question.body.toLowerCase().includes(query)) ||
+            (Array.isArray(question.tags) &&
+              question.tags.some((tag) => tag.toLowerCase().includes(query)))
           );
-          break;
-        case "oldest":
-          filtered.sort(
-            (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
-          );
-          break;
-        case "votes":
-          filtered.sort((a, b) => b.voteCount - a.voteCount);
-          break;
-        case "answers":
-          filtered.sort(
-            (a, b) => (b.answers?.length || 0) - (a.answers?.length || 0)
-          );
-          break;
-        default:
-          break;
-      }
-
-      setFilteredQuestions(filtered);
+        } catch (err) {
+          console.error("Error filtering question:", err, question);
+          return false;
+        }
+      });
     }
+
+    // Apply sorting if we have questions to sort
+    if (filtered.length > 0) {
+      try {
+        switch (sortBy) {
+          case "newest":
+            filtered.sort(
+              (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+            );
+            break;
+          case "oldest":
+            filtered.sort(
+              (a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0)
+            );
+            break;
+          case "votes":
+            filtered.sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0));
+            break;
+          case "answers":
+            filtered.sort(
+              (a, b) => (b.answers?.length || 0) - (a.answers?.length || 0)
+            );
+            break;
+          default:
+            break;
+        }
+      } catch (err) {
+        console.error("Error sorting questions:", err);
+      }
+    }
+
+    setFilteredQuestions(filtered);
   }, [questions, searchQuery, sortBy]);
 
   const handleSearchChange = (e) => {

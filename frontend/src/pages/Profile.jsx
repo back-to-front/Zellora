@@ -54,10 +54,38 @@ const Profile = () => {
   const fetchUserQuestions = async () => {
     try {
       setLoadingQuestions(true);
+
       // Fetch user's questions from the API
-      // Note: This is not implemented in the backend yet, so we'll just get all questions and filter
-      const questions = await questionService.getQuestions();
-      const userQs = questions.filter((q) => q.user._id === user._id);
+      const response = await questionService.getQuestions();
+
+      // Ensure we have an array of questions to work with
+      let questionsArray = [];
+
+      // Check if response is an array
+      if (Array.isArray(response)) {
+        questionsArray = response;
+      }
+      // Check if response has a questions property that is an array
+      else if (response && Array.isArray(response.questions)) {
+        questionsArray = response.questions;
+      }
+      // If we still don't have an array, log error and use empty array
+      else {
+        console.error("Unexpected API response format:", response);
+        questionsArray = [];
+      }
+
+      // Filter questions that belong to the current user
+      const userQs = questionsArray.filter((q) => {
+        if (!q || !q.user) return false;
+
+        // Check if user is an object with _id or if user itself is the id
+        const questionUserId = q.user._id || q.user;
+        const currentUserId = user._id;
+
+        return questionUserId === currentUserId;
+      });
+
       setUserQuestions(userQs);
     } catch (err) {
       setQuestionsError("Failed to fetch your questions");
@@ -289,7 +317,9 @@ const Profile = () => {
                   <div className='detail-item'>
                     <span className='detail-label'>Member Since:</span>
                     <span className='detail-value'>
-                      {new Date(user.createdAt).toLocaleDateString()}
+                      {user.createdAt
+                        ? new Date(user.createdAt).toLocaleDateString()
+                        : "Not available"}
                     </span>
                   </div>
 

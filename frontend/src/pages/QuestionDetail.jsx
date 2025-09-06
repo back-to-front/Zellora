@@ -150,13 +150,18 @@ const QuestionDetail = () => {
 
     try {
       setAnswering(true);
-      const newAnswer = await questionService.createAnswer(id, {
+      console.log("Submitting answer with data:", {
         body: answerContent,
       });
+      const newAnswer = await questionService.createAnswer(id, {
+        body: answerContent, // Using "body" to match the backend controller expectation
+      });
+      console.log("Response from createAnswer:", newAnswer);
       setAnswers([...answers, newAnswer]);
       setAnswerContent("");
       toast.success("Answer submitted successfully");
     } catch (err) {
+      console.error("Error submitting answer:", err);
       toast.error(err.response?.data?.message || "Failed to submit answer");
     } finally {
       setAnswering(false);

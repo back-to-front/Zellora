@@ -9,6 +9,8 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AdminRoute from "./components/auth/AdminRoute";
 import Questions from "./pages/Questions";
 import QuestionDetail from "./pages/QuestionDetail";
+import EditQuestion from "./pages/EditQuestion";
+import EditAnswer from "./pages/EditAnswer";
 import Profile from "./pages/Profile";
 import AskQuestion from "./pages/AskQuestion";
 import Spinner from "./components/ui/Spinner";
@@ -43,6 +45,22 @@ const router = createBrowserRouter([
       },
       { path: "questions", element: <Questions /> },
       { path: "questions/:id", element: <QuestionDetail /> },
+      {
+        path: "questions/:id/edit",
+        element: (
+          <ProtectedRoute>
+            <EditQuestion />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "answers/:id/edit",
+        element: (
+          <ProtectedRoute>
+            <EditAnswer />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: "admin",
         element: (
