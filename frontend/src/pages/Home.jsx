@@ -20,7 +20,16 @@ const Home = () => {
       try {
         setLoading(true);
         const data = await questionService.getQuestions();
-        setQuestions(data);
+        // Check if data is an array, otherwise look for questions property or set empty array
+        if (Array.isArray(data)) {
+          setQuestions(data);
+        } else if (data && data.questions && Array.isArray(data.questions)) {
+          setQuestions(data.questions);
+        } else {
+          console.error("Unexpected API response format:", data);
+          setQuestions([]);
+          setError("Unexpected data format received from server.");
+        }
       } catch (err) {
         setError("Failed to fetch questions. Please try again later.");
         console.error("Error fetching questions:", err);
@@ -65,7 +74,7 @@ const Home = () => {
       </div>
 
       <div className='questions-container'>
-        {questions.length === 0 ? (
+        {!Array.isArray(questions) || questions.length === 0 ? (
           <div className='no-questions'>
             <p>No questions yet. Be the first to ask a question!</p>
           </div>
