@@ -128,6 +128,168 @@ const PrivacyPolicy = () => {
   );
 };
 
+// Cookie Policy component (inline to avoid Brave shields issues)
+const CookiePolicy = () => {
+  return (
+    <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "2rem 1rem" }}>
+      <h1
+        style={{
+          fontSize: "2.5rem",
+          marginBottom: "1.5rem",
+          color: "var(--color-primary)",
+          textAlign: "center",
+        }}
+      >
+        Cookie Policy
+      </h1>
+
+      <Card>
+        <div style={{ padding: "1.5rem" }}>
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                color: "var(--color-primary)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid var(--color-border)",
+                paddingBottom: "0.5rem",
+              }}
+            >
+              1. What Are Cookies
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.6" }}>
+              Cookies are small text files that are stored on your computer or
+              mobile device when you visit a website. They are widely used to
+              make websites work more efficiently and provide information to the
+              website owners.
+            </p>
+          </section>
+
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                color: "var(--color-primary)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid var(--color-border)",
+                paddingBottom: "0.5rem",
+              }}
+            >
+              2. How We Use Cookies
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.6" }}>
+              Zellora uses cookies to improve your experience on our platform.
+              We use them to:
+            </p>
+            <ul style={{ paddingLeft: "1.5rem", marginBottom: "1rem" }}>
+              <li style={{ marginBottom: "0.5rem", lineHeight: "1.6" }}>
+                Remember your login details
+              </li>
+              <li style={{ marginBottom: "0.5rem", lineHeight: "1.6" }}>
+                Provide secure browsing
+              </li>
+              <li style={{ marginBottom: "0.5rem", lineHeight: "1.6" }}>
+                Remember your preferences
+              </li>
+              <li style={{ marginBottom: "0.5rem", lineHeight: "1.6" }}>
+                Analyze how our website is used to improve our service
+              </li>
+            </ul>
+          </section>
+
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                color: "var(--color-primary)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid var(--color-border)",
+                paddingBottom: "0.5rem",
+              }}
+            >
+              3. Types of Cookies We Use
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.6" }}>
+              <strong>Essential Cookies:</strong> These cookies are necessary
+              for the website to function properly and cannot be switched off.
+            </p>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.6" }}>
+              <strong>Functionality Cookies:</strong> These cookies enable
+              enhanced functionality and personalization.
+            </p>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.6" }}>
+              <strong>Analytics Cookies:</strong> These cookies help us
+              understand how visitors interact with our website.
+            </p>
+          </section>
+
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                color: "var(--color-primary)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid var(--color-border)",
+                paddingBottom: "0.5rem",
+              }}
+            >
+              4. Managing Cookies
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.6" }}>
+              Most web browsers allow you to manage your cookie preferences. You
+              can:
+            </p>
+            <ul style={{ paddingLeft: "1.5rem", marginBottom: "1rem" }}>
+              <li style={{ marginBottom: "0.5rem", lineHeight: "1.6" }}>
+                Delete cookies from your browser
+              </li>
+              <li style={{ marginBottom: "0.5rem", lineHeight: "1.6" }}>
+                Block cookies by activating settings on your browser
+              </li>
+              <li style={{ marginBottom: "0.5rem", lineHeight: "1.6" }}>
+                Allow or block cookies on a site-by-site basis
+              </li>
+            </ul>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.6" }}>
+              Please note that if you choose to disable cookies, some features
+              of our website may not function properly.
+            </p>
+          </section>
+
+          <section style={{ marginBottom: "2rem" }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                color: "var(--color-primary)",
+                marginBottom: "1rem",
+                borderBottom: "1px solid var(--color-border)",
+                paddingBottom: "0.5rem",
+              }}
+            >
+              5. Changes to This Cookie Policy
+            </h2>
+            <p style={{ marginBottom: "1rem", lineHeight: "1.6" }}>
+              We may update our Cookie Policy from time to time. We will notify
+              you of any changes by posting the new Cookie Policy on this page.
+            </p>
+          </section>
+
+          <div
+            style={{
+              marginTop: "2rem",
+              fontStyle: "italic",
+              color: "var(--color-text-secondary)",
+              textAlign: "right",
+            }}
+          >
+            <p>Last updated: September 6, 2025</p>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+};
+
 // Lazy load admin dashboard
 const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
 
@@ -176,6 +338,7 @@ const router = createBrowserRouter([
       },
       { path: "terms", element: <TermsOfService /> },
       { path: "privacy", element: <PrivacyPolicy /> },
+      { path: "cookies", element: <CookiePolicy /> },
       {
         path: "admin",
         element: (
