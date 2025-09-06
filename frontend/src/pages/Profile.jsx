@@ -151,8 +151,18 @@ const Profile = () => {
       }
 
       await updateProfile(updateData);
+
+      // Clear password fields on success
+      if (profileData.newPassword) {
+        setProfileData({
+          ...profileData,
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
+      }
+
       setEditMode(false);
-      toast.success("Profile updated successfully");
     } catch (err) {
       const message = err.response?.data?.message || "Failed to update profile";
       toast.error(message);

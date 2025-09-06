@@ -137,8 +137,17 @@ export const updateUserProfile = async (req, res) => {
       user.username = req.body.username || user.username;
       user.email = req.body.email || user.email;
 
-      if (req.body.password) {
-        user.password = req.body.password;
+      // Check if user is trying to update password
+      if (req.body.newPassword && req.body.currentPassword) {
+        // Verify current password before allowing password change
+        if (await user.matchPassword(req.body.currentPassword)) {
+          user.password = req.body.newPassword;
+        } else {
+          return res.status(400).json({
+            message: 'Current password is incorrect',
+            field: 'currentPassword',
+          });
+        }
       }
 
       const updatedUser = await user.save();
