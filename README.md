@@ -1,6 +1,6 @@
 # Zellora
 
-## Developer: Lock5 (back-to-front)
+## Developer: Austen Cole
 
 ## Overview
 
