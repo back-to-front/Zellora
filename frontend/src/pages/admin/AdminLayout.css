@@ -34,7 +34,7 @@
   padding: 0.75rem 1rem;
   border-radius: 0.375rem;
   font-size: 0.95rem;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
   background: none;
   border: none;
   cursor: pointer;
@@ -44,12 +44,11 @@
 
 .admin-nav-item:hover {
   background-color: rgba(0, 0, 0, 0.05);
-  color: var(--color-text-primary);
+  color: var(--text-primary);
 }
 
 .admin-nav-item.active {
-  background-color: var(--color-primary);
-  color: white;
+  color: var(--primary-dark);
 }
 
 .admin-nav-icon {

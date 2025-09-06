@@ -68,7 +68,7 @@ const Footer = () => {
             <h3 className='footer-title'>Connect</h3>
             <div className='social-links'>
               <a
-                href='https://github.com/zellora'
+                href='https://github.com/back-to-front'
                 target='_blank'
                 rel='noopener noreferrer'
                 className='social-link'
@@ -76,7 +76,7 @@ const Footer = () => {
                 <FaGithub />
               </a>
               <a
-                href='https://twitter.com/zellora'
+                href='https://x.com/'
                 target='_blank'
                 rel='noopener noreferrer'
                 className='social-link'
@@ -84,7 +84,7 @@ const Footer = () => {
                 <FaTwitter />
               </a>
               <a
-                href='https://linkedin.com/company/zellora'
+                href='https://linkedin.com/'
                 target='_blank'
                 rel='noopener noreferrer'
                 className='social-link'

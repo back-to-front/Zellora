@@ -29,9 +29,20 @@ export const getQuestions = async (req, res) => {
   try {
     const pageSize = 10;
     const page = Number(req.query.page) || 1;
+    const searchQuery = req.query.search || '';
 
-    const count = await Question.countDocuments({});
-    const questions = await Question.find({})
+    // Build search query
+    const query = {};
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: searchQuery, $options: 'i' } },
+        { body: { $regex: searchQuery, $options: 'i' } },
+        { tags: { $in: [new RegExp(searchQuery, 'i')] } },
+      ];
+    }
+
+    const count = await Question.countDocuments(query);
+    const questions = await Question.find(query)
       .populate('user', 'username')
       .sort({ createdAt: -1 })
       .limit(pageSize)

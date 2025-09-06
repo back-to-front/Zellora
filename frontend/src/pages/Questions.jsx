@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import {
   FaPlus,
   FaSearch,
@@ -23,13 +23,40 @@ const Questions = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("newest");
   const [filteredQuestions, setFilteredQuestions] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
         setLoading(true);
-        const data = await questionService.getQuestions();
-        setQuestions(data);
+
+        // Get search query from URL if available
+        const urlSearchQuery = searchParams.get("search") || "";
+
+        // Update local state to match URL
+        setSearchQuery(urlSearchQuery);
+
+        // Fetch questions with search query if available
+        const response = await questionService.getQuestions(urlSearchQuery);
+
+        // Ensure we have an array of questions to work with
+        let questionsArray = [];
+
+        // Check if response is an array
+        if (Array.isArray(response)) {
+          questionsArray = response;
+        }
+        // Check if response has a questions property that is an array
+        else if (response && Array.isArray(response.questions)) {
+          questionsArray = response.questions;
+        }
+        // If we still don't have an array, log error and use empty array
+        else {
+          console.error("Unexpected API response format:", response);
+          questionsArray = [];
+        }
+
+        setQuestions(questionsArray);
       } catch (err) {
         setError("Failed to fetch questions. Please try again later.");
         console.error("Error fetching questions:", err);
@@ -39,51 +66,78 @@ const Questions = () => {
     };
 
     fetchQuestions();
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
-    // Filter and sort questions when questions, searchQuery or sortBy changes
-    if (questions.length > 0) {
-      let filtered = [...questions];
+    // Always set filtered questions even if the array is empty
+    let filtered = Array.isArray(questions) ? [...questions] : [];
 
-      // Apply search filter
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase();
-        filtered = filtered.filter(
-          (question) =>
-            question.title.toLowerCase().includes(query) ||
-            question.body.toLowerCase().includes(query) ||
-            question.tags.some((tag) => tag.toLowerCase().includes(query))
-        );
+    // We don't need client-side filtering when using API search
+    // The API already returns filtered results based on the search query
+    // This is only needed if we want additional filtering beyond what the API provides
+
+    // Apply sorting if we have questions to sort
+    if (filtered.length > 0) {
+      try {
+        switch (sortBy) {
+          case "newest":
+            filtered.sort(
+              (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+            );
+            break;
+          case "oldest":
+            filtered.sort(
+              (a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0)
+            );
+            break;
+          case "votes":
+            filtered.sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0));
+            break;
+          case "answers":
+            filtered.sort(
+              (a, b) => (b.answers?.length || 0) - (a.answers?.length || 0)
+            );
+            break;
+          default:
+            break;
+        }
+      } catch (err) {
+        console.error("Error sorting questions:", err);
       }
-
-      // Apply sorting
-      switch (sortBy) {
-        case "newest":
-          filtered.sort(
-            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-          );
-          break;
-        case "oldest":
-          filtered.sort(
-            (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
-          );
-          break;
-        case "votes":
-          filtered.sort((a, b) => b.voteCount - a.voteCount);
-          break;
-        case "answers":
-          filtered.sort(
-            (a, b) => (b.answers?.length || 0) - (a.answers?.length || 0)
-          );
-          break;
-        default:
-          break;
-      }
-
-      setFilteredQuestions(filtered);
     }
-  }, [questions, searchQuery, sortBy]);
+
+    // Apply sorting to the filtered questions
+    if (filtered.length > 0) {
+      try {
+        switch (sortBy) {
+          case "newest":
+            filtered.sort(
+              (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+            );
+            break;
+          case "oldest":
+            filtered.sort(
+              (a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0)
+            );
+            break;
+          case "votes":
+            filtered.sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0));
+            break;
+          case "answers":
+            filtered.sort(
+              (a, b) => (b.answers?.length || 0) - (a.answers?.length || 0)
+            );
+            break;
+          default:
+            break;
+        }
+      } catch (err) {
+        console.error("Error sorting questions:", err);
+      }
+    }
+
+    setFilteredQuestions(filtered);
+  }, [questions, sortBy]);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -91,6 +145,14 @@ const Questions = () => {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
+
+    // Update the URL with the search query
+    if (searchQuery.trim()) {
+      setSearchParams({ search: searchQuery.trim() });
+    } else {
+      // If search is empty, remove search param from URL
+      setSearchParams({});
+    }
   };
 
   const handleSortChange = (value) => {
@@ -127,6 +189,9 @@ const Questions = () => {
               onChange={handleSearchChange}
               className='search-input'
             />
+            <button type='submit' className='search-button'>
+              <FaSearch />
+            </button>
           </div>
         </form>
 

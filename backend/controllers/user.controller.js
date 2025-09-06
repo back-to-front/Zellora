@@ -52,10 +52,13 @@ export const authUser = async (req, res) => {
       await user.save();
 
       res.json({
-        _id: user._id,
-        username: user.username,
-        email: user.email,
-        isAdmin: user.isAdmin,
+        user: {
+          _id: user._id,
+          username: user.username,
+          email: user.email,
+          isAdmin: user.isAdmin,
+          createdAt: user.createdAt,
+        },
         token: generateToken(user._id),
       });
     } else {
@@ -88,10 +91,13 @@ export const registerUser = async (req, res) => {
 
     if (user) {
       res.status(201).json({
-        _id: user._id,
-        username: user.username,
-        email: user.email,
-        isAdmin: user.isAdmin,
+        user: {
+          _id: user._id,
+          username: user.username,
+          email: user.email,
+          isAdmin: user.isAdmin,
+          createdAt: user.createdAt,
+        },
         token: generateToken(user._id),
       });
     } else {
@@ -116,6 +122,7 @@ export const getUserProfile = async (req, res) => {
         username: user.username,
         email: user.email,
         isAdmin: user.isAdmin,
+        createdAt: user.createdAt,
       });
     } else {
       res.status(404).json({ message: 'User not found' });
@@ -137,8 +144,17 @@ export const updateUserProfile = async (req, res) => {
       user.username = req.body.username || user.username;
       user.email = req.body.email || user.email;
 
-      if (req.body.password) {
-        user.password = req.body.password;
+      // Check if user is trying to update password
+      if (req.body.newPassword && req.body.currentPassword) {
+        // Verify current password before allowing password change
+        if (await user.matchPassword(req.body.currentPassword)) {
+          user.password = req.body.newPassword;
+        } else {
+          return res.status(400).json({
+            message: 'Current password is incorrect',
+            field: 'currentPassword',
+          });
+        }
       }
 
       const updatedUser = await user.save();
@@ -148,6 +164,7 @@ export const updateUserProfile = async (req, res) => {
         username: updatedUser.username,
         email: updatedUser.email,
         isAdmin: updatedUser.isAdmin,
+        createdAt: updatedUser.createdAt,
         token: generateToken(updatedUser._id),
       });
     } else {

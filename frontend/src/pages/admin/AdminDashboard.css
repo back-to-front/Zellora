@@ -30,7 +30,7 @@
 }
 
 .tab-item.active {
-  color: var(--color-primary);
+  color: var(--primary-dark);
   border-bottom: 3px solid var(--color-primary);
 }
 
