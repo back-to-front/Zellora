@@ -5,6 +5,9 @@
   background-color: var(--background-color);
   border-bottom: 1px solid var(--border-color);
   box-shadow: var(--box-shadow-sm);
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .header-content {
@@ -12,6 +15,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-md) 0;
+  width: 100%;
 }
 
 .logo {

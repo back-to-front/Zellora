@@ -116,6 +116,7 @@ a:hover {
   padding-left: var(--spacing-lg);
   margin-right: auto;
   margin-left: auto;
+  max-width: 100%;
 }
 
 @media (min-width: 576px) {
