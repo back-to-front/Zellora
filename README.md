@@ -1,5 +1,8 @@
 # Zellora
 
+The backend can take up to 1 minute to load since its running on a free server
+It winds down after a period of inactivity
+
 ## Developer: Austen Cole
 
 ## Hosted Link
