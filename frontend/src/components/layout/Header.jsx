@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import "./Header.css";
+import logo from "/Zellora-Logo.png";
 
 const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -35,6 +36,7 @@ const Header = () => {
         <div className='header-content'>
           <div className='logo'>
             <Link to='/' className='brand'>
+              <img src={logo} alt='Zellora Logo' className='brand-logo' />
               Zellora
             </Link>
           </div>

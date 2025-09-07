@@ -28,6 +28,14 @@
   font-weight: var(--font-weight-bold);
   color: var(--primary-color);
   text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.brand-logo {
+  height: 40px;
+  width: auto;
+  margin-right: 8px;
 }
 
 .search-form {
@@ -193,11 +201,6 @@
 }
 
 @media (min-width: 351px) and (max-width: 992px) {
-  /* .header-content {
-    flex-wrap: wrap;
-    padding-bottom: 0;
-  } */
-
   .search-form {
     order: 3;
     margin: var(--spacing-md) 0;
@@ -205,11 +208,6 @@
     width: 100%;
     flex-basis: 100%;
   }
-
-  /* .mobile-menu-toggle {
-    display: block;
-    order: 2;
-  } */
 }
 
 @media (max-width: 508px) {
