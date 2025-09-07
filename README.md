@@ -13,6 +13,10 @@ https://zellora-frontend.onrender.com/
 
 https://render.com
 
+## Wire Frames
+
+[WireFrames](/WireFrames/)
+
 ## Overview
 
 Zellora is a full-stack Q&A platform that enables users to ask questions, provide answers, and share knowledge with a community. Inspired by platforms like Stack Overflow and Quora, Zellora offers a clean, user-friendly interface for knowledge sharing and problem solving.
