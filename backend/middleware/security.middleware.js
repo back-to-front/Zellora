@@ -17,14 +17,32 @@ export const limiter = rateLimit({
 
 // CORS configuration
 export const corsOptions = {
-  origin:
-    process.env.NODE_ENV === 'production'
-      ? process.env.ALLOWED_ORIGINS?.split(',') || 'https://yourdomain.com'
-      : [
-          'http://127.0.0.1:5173',
-          'http://localhost:5173',
-          'http://localhost:3000',
-        ],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl requests)
+    if (!origin) return callback(null, true);
+
+    // Check if the origin is allowed
+    const allowedOrigins =
+      process.env.NODE_ENV === 'production'
+        ? process.env.ALLOWED_ORIGINS?.split(',')
+        : [
+            'http://127.0.0.1:5173',
+            'http://localhost:5173',
+            'http://127.0.0.1:5174', // For Vite preview
+            'http://localhost:5174',
+            'http://127.0.0.1:3000',
+            'http://localhost:3000',
+            'http://127.0.0.1:4173', // For Vite preview
+            'http://localhost:4173',
+          ];
+
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: [
     'Content-Type',

@@ -29,6 +29,25 @@ app.use(securityHeaders); // Helmet for security headers
 // Apply proper CORS configuration (must be before other middleware)
 app.use(cors(corsOptions));
 
+// CORS error handling
+app.use((err, req, res, next) => {
+  if (err.message === 'Not allowed by CORS') {
+    console.error(`CORS Error: ${req.headers.origin} is not allowed`);
+    return res.status(403).json({
+      message: 'CORS error: Origin not allowed',
+      origin: req.headers.origin,
+      allowedOrigins:
+        process.env.NODE_ENV === 'production'
+          ? process.env.ALLOWED_ORIGINS?.split(',')
+          : [
+              'http://localhost:5173',
+              'http://127.0.0.1:5173' /* others in corsOptions */,
+            ],
+    });
+  }
+  next(err);
+});
+
 // Parse request body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
